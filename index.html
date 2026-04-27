@@ -35,11 +35,12 @@
       justify-content: center;
     }
 
-    input, select {
+    input, select, textarea {
       padding: 12px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 8px;
+      box-sizing: border-box;
     }
 
     .grid {
@@ -79,6 +80,91 @@
       background: #eee;
       font-size: 13px;
     }
+
+    .sold-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 8px;
+      background: #111;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .sold-btn:hover {
+      background: #333;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .modal {
+      background: white;
+      width: 100%;
+      max-width: 430px;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .modal label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .modal input,
+    .modal select,
+    .modal textarea {
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .modal-actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      background: #111;
+      color: white;
+    }
+
+    .cancel-btn {
+      background: #ddd;
+    }
+
+    #statusMessage {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -108,8 +194,62 @@
 
   <div id="inventory" class="grid"></div>
 
+  <!-- SOLD MODAL -->
+  <div id="soldModal" class="modal-overlay">
+    <div class="modal">
+      <h2>Log Sale</h2>
+
+      <label>Passcode</label>
+      <input type="password" id="passcodeInput" placeholder="Enter passcode" />
+
+      <label>Product Name</label>
+      <input type="text" id="productNameInput" readonly />
+
+      <label>Set</label>
+      <input type="text" id="setInput" readonly />
+
+      <label>Card #</label>
+      <input type="text" id="cardNumberInput" readonly />
+
+      <label>Condition</label>
+      <input type="text" id="conditionInput" readonly />
+
+      <label>Qty Sold</label>
+      <input type="number" id="qtySoldInput" value="1" min="1" />
+
+      <label>Sold Price</label>
+      <input type="number" id="soldPriceInput" step="0.01" />
+
+      <label>Payment Method</label>
+      <select id="paymentMethodInput">
+        <option value="">Select payment</option>
+        <option value="Cash">Cash</option>
+        <option value="Venmo">Venmo</option>
+        <option value="Cash App">Cash App</option>
+        <option value="Zelle">Zelle</option>
+        <option value="Card">Card</option>
+        <option value="Trade">Trade</option>
+      </select>
+
+      <label>Customer/Event</label>
+      <input type="text" id="customerEventInput" placeholder="Example: Dallas Card Show" />
+
+      <label>Notes</label>
+      <textarea id="notesInput" rows="3" placeholder="Optional notes"></textarea>
+
+      <div class="modal-actions">
+        <button class="cancel-btn" onclick="closeSoldModal()">Cancel</button>
+        <button class="submit-btn" onclick="submitSale()">Submit Sale</button>
+      </div>
+
+      <div id="statusMessage"></div>
+    </div>
+  </div>
+
   <script>
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSF9FO8t7Ake0qvxB4g0M9xw5WMILHKw19Wg0HGuQf-AA0yHnjjBfJzyAbKg0kEbGGX2m7pQmY8nX9H/pub?gid=2036564200&single=true&output=csv";
+
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbxPF0qRki2vAvqhDbEGeojGS3xMFIkisSI1SsilFwBZ7UqPG0u5CXX9riCu_ejDk5wG/exec";
 
     let inventoryData = [];
 
@@ -122,6 +262,11 @@
         renderInventory();
       }
     });
+
+    function money(value) {
+      const number = parseFloat(String(value || "0").replace("$", "").replace(",", ""));
+      return isNaN(number) ? "0.00" : number.toFixed(2);
+    }
 
     function populateFilters() {
       const setFilter = document.getElementById("setFilter");
@@ -174,7 +319,7 @@
       const container = document.getElementById("inventory");
       container.innerHTML = "";
 
-      filtered.forEach(item => {
+      filtered.forEach((item, index) => {
         const card = document.createElement("div");
         card.className = "card";
 
@@ -186,12 +331,68 @@
           <div class="info"><strong>Variant:</strong> ${item["Variant"] || ""}</div>
           <div class="info"><strong>Grade:</strong> ${item["Grade"] || ""}</div>
           <div class="info"><strong>Condition:</strong> ${item["Condition"] || ""}</div>
-          <div class="price">$${item["Market Price"] || "0.00"}</div>
+          <div class="price">$${money(item["Market Price"])}</div>
           <div class="qty">Qty: ${item["Qty"] || "0"}</div>
+          <button class="sold-btn" onclick='openSoldModal(${JSON.stringify(item).replace(/'/g, "&apos;")})'>Sold</button>
         `;
 
         container.appendChild(card);
       });
+    }
+
+    function openSoldModal(item) {
+      document.getElementById("soldModal").style.display = "flex";
+      document.getElementById("statusMessage").textContent = "";
+
+      document.getElementById("passcodeInput").value = "";
+      document.getElementById("productNameInput").value = item["Product Name"] || "";
+      document.getElementById("setInput").value = item["Set"] || "";
+      document.getElementById("cardNumberInput").value = item["Card #"] || "";
+      document.getElementById("conditionInput").value = item["Condition"] || "";
+      document.getElementById("qtySoldInput").value = "1";
+      document.getElementById("soldPriceInput").value = money(item["Market Price"]);
+      document.getElementById("paymentMethodInput").value = "";
+      document.getElementById("customerEventInput").value = "";
+      document.getElementById("notesInput").value = "";
+    }
+
+    function closeSoldModal() {
+      document.getElementById("soldModal").style.display = "none";
+    }
+
+    async function submitSale() {
+      const status = document.getElementById("statusMessage");
+      status.textContent = "Submitting...";
+
+      const payload = {
+        passcode: document.getElementById("passcodeInput").value,
+        productName: document.getElementById("productNameInput").value,
+        set: document.getElementById("setInput").value,
+        cardNumber: document.getElementById("cardNumberInput").value,
+        condition: document.getElementById("conditionInput").value,
+        qtySold: document.getElementById("qtySoldInput").value,
+        soldPrice: document.getElementById("soldPriceInput").value,
+        paymentMethod: document.getElementById("paymentMethodInput").value,
+        customerEvent: document.getElementById("customerEventInput").value,
+        notes: document.getElementById("notesInput").value
+      };
+
+      try {
+        const response = await fetch(scriptUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        status.textContent = "Sale submitted. Check your Sold Log tab.";
+        setTimeout(closeSoldModal, 1200);
+
+      } catch (error) {
+        status.textContent = "Error submitting sale. Try again.";
+      }
     }
 
     document.getElementById("searchInput").addEventListener("input", renderInventory);
