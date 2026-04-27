@@ -81,6 +81,17 @@
       font-size: 13px;
     }
 
+    .type-badge {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 4px 9px;
+      border-radius: 20px;
+      background: #111;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
     .sold-btn {
       margin-top: 12px;
       width: 100%;
@@ -108,24 +119,26 @@
       padding: 18px;
     }
 
-   .modal {
-  background: white;
-  width: 100%;
-  max-width: 700px; /* wider */
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-}
+    .modal {
+      background: white;
+      width: 100%;
+      max-width: 700px;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
 
     .form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
 
-.form-full {
-  grid-column: span 2;
-}
+    .form-full {
+      grid-column: span 2;
+    }
 
     .modal h2 {
       margin-top: 0;
@@ -175,6 +188,22 @@
       font-size: 14px;
       font-weight: bold;
     }
+
+    #loadingMessage {
+      text-align: center;
+      color: #666;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-full {
+        grid-column: span 1;
+      }
+    }
   </style>
 </head>
 
@@ -184,7 +213,12 @@
   <div class="subtitle">Current Card Inventory</div>
 
   <div class="controls">
-    <input type="text" id="searchInput" placeholder="Search card name..." />
+    <select id="inventoryType">
+      <option value="singles">Singles</option>
+      <option value="sealed">Sealed</option>
+    </select>
+
+    <input type="text" id="searchInput" placeholder="Search item name..." />
 
     <select id="setFilter">
       <option value="">All Sets</option>
@@ -202,73 +236,79 @@
     </select>
   </div>
 
+  <div id="loadingMessage">Loading inventory...</div>
   <div id="inventory" class="grid"></div>
 
   <!-- SOLD MODAL -->
   <div id="soldModal" class="modal-overlay">
     <div class="modal">
       <h2>Log Sale</h2>
-<div class="form-grid">
 
-  <div class="form-full">
-    <label>Passcode</label>
-    <input type="password" id="passcodeInput" placeholder="Enter passcode" />
-  </div>
+      <div class="form-grid">
+        <div class="form-full">
+          <label>Passcode</label>
+          <input type="password" id="passcodeInput" placeholder="Enter passcode" />
+        </div>
 
-  <div>
-    <label>Product Name</label>
-    <input type="text" id="productNameInput" readonly />
-  </div>
+        <div>
+          <label>Type</label>
+          <input type="text" id="typeInput" readonly />
+        </div>
 
-  <div>
-    <label>Set</label>
-    <input type="text" id="setInput" readonly />
-  </div>
+        <div>
+          <label>Product Name</label>
+          <input type="text" id="productNameInput" readonly />
+        </div>
 
-  <div>
-    <label>Card #</label>
-    <input type="text" id="cardNumberInput" readonly />
-  </div>
+        <div>
+          <label>Set</label>
+          <input type="text" id="setInput" readonly />
+        </div>
 
-  <div>
-    <label>Condition</label>
-    <input type="text" id="conditionInput" readonly />
-  </div>
+        <div>
+          <label>Card #</label>
+          <input type="text" id="cardNumberInput" readonly />
+        </div>
 
-  <div>
-    <label>Qty Sold</label>
-    <input type="number" id="qtySoldInput" value="1" min="1" />
-  </div>
+        <div>
+          <label>Condition</label>
+          <input type="text" id="conditionInput" readonly />
+        </div>
 
-  <div>
-    <label>Sold Price</label>
-    <input type="number" id="soldPriceInput" step="0.01" />
-  </div>
+        <div>
+          <label>Qty Sold</label>
+          <input type="number" id="qtySoldInput" value="1" min="1" />
+        </div>
 
-  <div>
-    <label>Payment Method</label>
-    <select id="paymentMethodInput">
-      <option value="">Select</option>
-      <option>Cash</option>
-      <option>Venmo</option>
-      <option>Cash App</option>
-      <option>Zelle</option>
-      <option>Card</option>
-      <option>Trade</option>
-    </select>
-  </div>
+        <div>
+          <label>Sold Price</label>
+          <input type="number" id="soldPriceInput" step="0.01" />
+        </div>
 
-  <div>
-    <label>Customer/Event</label>
-    <input type="text" id="customerEventInput" />
-  </div>
+        <div>
+          <label>Payment Method</label>
+          <select id="paymentMethodInput">
+            <option value="">Select</option>
+            <option>Cash</option>
+            <option>Venmo</option>
+            <option>Cash App</option>
+            <option>Zelle</option>
+            <option>Card</option>
+            <option>Trade</option>
+          </select>
+        </div>
 
-  <div class="form-full">
-    <label>Notes</label>
-    <textarea id="notesInput" rows="2"></textarea>
-  </div>
+        <div>
+          <label>Customer/Event</label>
+          <input type="text" id="customerEventInput" />
+        </div>
 
-</div>
+        <div class="form-full">
+          <label>Notes</label>
+          <textarea id="notesInput" rows="2"></textarea>
+        </div>
+      </div>
+
       <div class="modal-actions">
         <button class="cancel-btn" onclick="closeSoldModal()">Cancel</button>
         <button class="submit-btn" onclick="submitSale()">Submit Sale</button>
@@ -279,25 +319,46 @@
   </div>
 
   <script>
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSF9FO8t7Ake0qvxB4g0M9xw5WMILHKw19Wg0HGuQf-AA0yHnjjBfJzyAbKg0kEbGGX2m7pQmY8nX9H/pub?gid=2036564200&single=true&output=csv";
+    const csvLinks = {
+      singles: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSF9FO8t7Ake0qvxB4g0M9xw5WMILHKw19Wg0HGuQf-AA0yHnjjBfJzyAbKg0kEbGGX2m7pQmY8nX9H/pub?gid=2036564200&single=true&output=csv",
+      sealed: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSF9FO8t7Ake0qvxB4g0M9xw5WMILHKw19Wg0HGuQf-AA0yHnjjBfJzyAbKg0kEbGGX2m7pQmY8nX9H/pub?gid=979503658&single=true&output=csv"
+    };
 
     const scriptUrl = "https://script.google.com/macros/s/AKfycbxPF0qRki2vAvqhDbEGeojGS3xMFIkisSI1SsilFwBZ7UqPG0u5CXX9riCu_ejDk5wG/exec";
 
     let inventoryData = [];
-
-    Papa.parse(csvUrl, {
-      download: true,
-      header: true,
-      complete: function(results) {
-        inventoryData = results.data.filter(item => item["Product Name"]);
-        populateFilters();
-        renderInventory();
-      }
-    });
+    let currentType = "singles";
 
     function money(value) {
       const number = parseFloat(String(value || "0").replace("$", "").replace(",", ""));
       return isNaN(number) ? "0.00" : number.toFixed(2);
+    }
+
+    function loadInventory() {
+      const loading = document.getElementById("loadingMessage");
+      const container = document.getElementById("inventory");
+
+      loading.textContent = "Loading inventory...";
+      container.innerHTML = "";
+
+      Papa.parse(csvLinks[currentType], {
+        download: true,
+        header: true,
+        complete: function(results) {
+          inventoryData = results.data.filter(item => item["Product Name"]);
+
+          document.getElementById("setFilter").innerHTML = '<option value="">All Sets</option>';
+          document.getElementById("conditionFilter").innerHTML = '<option value="">All Conditions</option>';
+
+          populateFilters();
+          renderInventory();
+
+          loading.textContent = inventoryData.length ? "" : "No inventory found.";
+        },
+        error: function() {
+          loading.textContent = "Error loading inventory.";
+        }
+      });
     }
 
     function populateFilters() {
@@ -330,7 +391,7 @@
 
       let filtered = inventoryData.filter(item => {
         return (
-          item["Product Name"].toLowerCase().includes(search) &&
+          String(item["Product Name"] || "").toLowerCase().includes(search) &&
           (set === "" || item["Set"] === set) &&
           (condition === "" || item["Condition"] === condition)
         );
@@ -345,18 +406,21 @@
       }
 
       if (sort === "nameAZ") {
-        filtered.sort((a, b) => a["Product Name"].localeCompare(b["Product Name"]));
+        filtered.sort((a, b) => String(a["Product Name"] || "").localeCompare(String(b["Product Name"] || "")));
       }
 
       const container = document.getElementById("inventory");
       container.innerHTML = "";
 
-      filtered.forEach((item, index) => {
+      filtered.forEach(item => {
         const card = document.createElement("div");
         card.className = "card";
 
+        const itemType = item["Type"] || (currentType === "sealed" ? "Sealed" : "Single");
+
         card.innerHTML = `
-          <h3>${item["Product Name"]}</h3>
+          <span class="type-badge">${itemType}</span>
+          <h3>${item["Product Name"] || ""}</h3>
           <div class="info"><strong>Set:</strong> ${item["Set"] || ""}</div>
           <div class="info"><strong>Card #:</strong> ${item["Card #"] || ""}</div>
           <div class="info"><strong>Rarity:</strong> ${item["Rarity"] || ""}</div>
@@ -373,10 +437,13 @@
     }
 
     function openSoldModal(item) {
+      const itemType = item["Type"] || (currentType === "sealed" ? "Sealed" : "Single");
+
       document.getElementById("soldModal").style.display = "flex";
       document.getElementById("statusMessage").textContent = "";
 
       document.getElementById("passcodeInput").value = "";
+      document.getElementById("typeInput").value = itemType;
       document.getElementById("productNameInput").value = item["Product Name"] || "";
       document.getElementById("setInput").value = item["Set"] || "";
       document.getElementById("cardNumberInput").value = item["Card #"] || "";
@@ -397,6 +464,7 @@
       status.textContent = "Submitting...";
 
       const payload = {
+        type: document.getElementById("typeInput").value,
         passcode: document.getElementById("passcodeInput").value,
         productName: document.getElementById("productNameInput").value,
         set: document.getElementById("setInput").value,
@@ -410,7 +478,7 @@
       };
 
       try {
-        const response = await fetch(scriptUrl, {
+        await fetch(scriptUrl, {
           method: "POST",
           mode: "no-cors",
           headers: {
@@ -419,18 +487,31 @@
           body: JSON.stringify(payload)
         });
 
-        status.textContent = "Sale submitted. Check your Sold Log tab.";
-        setTimeout(closeSoldModal, 1200);
+        status.textContent = "Sale submitted. Refreshing inventory...";
+
+        setTimeout(() => {
+          closeSoldModal();
+          loadInventory();
+        }, 1500);
 
       } catch (error) {
         status.textContent = "Error submitting sale. Try again.";
       }
     }
 
+    document.getElementById("inventoryType").addEventListener("change", function() {
+      currentType = this.value;
+      document.getElementById("searchInput").value = "";
+      document.getElementById("sortSelect").value = "";
+      loadInventory();
+    });
+
     document.getElementById("searchInput").addEventListener("input", renderInventory);
     document.getElementById("setFilter").addEventListener("change", renderInventory);
     document.getElementById("conditionFilter").addEventListener("change", renderInventory);
     document.getElementById("sortSelect").addEventListener("change", renderInventory);
+
+    loadInventory();
   </script>
 
 </body>
