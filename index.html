@@ -108,14 +108,24 @@
       padding: 18px;
     }
 
-    .modal {
-      background: white;
-      width: 100%;
-      max-width: 430px;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
+   .modal {
+  background: white;
+  width: 100%;
+  max-width: 700px; /* wider */
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+    .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-full {
+  grid-column: span 2;
+}
 
     .modal h2 {
       margin-top: 0;
@@ -198,45 +208,67 @@
   <div id="soldModal" class="modal-overlay">
     <div class="modal">
       <h2>Log Sale</h2>
+<div class="form-grid">
 
-      <label>Passcode</label>
-      <input type="password" id="passcodeInput" placeholder="Enter passcode" />
+  <div class="form-full">
+    <label>Passcode</label>
+    <input type="password" id="passcodeInput" placeholder="Enter passcode" />
+  </div>
 
-      <label>Product Name</label>
-      <input type="text" id="productNameInput" readonly />
+  <div>
+    <label>Product Name</label>
+    <input type="text" id="productNameInput" readonly />
+  </div>
 
-      <label>Set</label>
-      <input type="text" id="setInput" readonly />
+  <div>
+    <label>Set</label>
+    <input type="text" id="setInput" readonly />
+  </div>
 
-      <label>Card #</label>
-      <input type="text" id="cardNumberInput" readonly />
+  <div>
+    <label>Card #</label>
+    <input type="text" id="cardNumberInput" readonly />
+  </div>
 
-      <label>Condition</label>
-      <input type="text" id="conditionInput" readonly />
+  <div>
+    <label>Condition</label>
+    <input type="text" id="conditionInput" readonly />
+  </div>
 
-      <label>Qty Sold</label>
-      <input type="number" id="qtySoldInput" value="1" min="1" />
+  <div>
+    <label>Qty Sold</label>
+    <input type="number" id="qtySoldInput" value="1" min="1" />
+  </div>
 
-      <label>Sold Price</label>
-      <input type="number" id="soldPriceInput" step="0.01" />
+  <div>
+    <label>Sold Price</label>
+    <input type="number" id="soldPriceInput" step="0.01" />
+  </div>
 
-      <label>Payment Method</label>
-      <select id="paymentMethodInput">
-        <option value="">Select payment</option>
-        <option value="Cash">Cash</option>
-        <option value="Venmo">Venmo</option>
-        <option value="Cash App">Cash App</option>
-        <option value="Zelle">Zelle</option>
-        <option value="Card">Card</option>
-        <option value="Trade">Trade</option>
-      </select>
+  <div>
+    <label>Payment Method</label>
+    <select id="paymentMethodInput">
+      <option value="">Select</option>
+      <option>Cash</option>
+      <option>Venmo</option>
+      <option>Cash App</option>
+      <option>Zelle</option>
+      <option>Card</option>
+      <option>Trade</option>
+    </select>
+  </div>
 
-      <label>Customer/Event</label>
-      <input type="text" id="customerEventInput" placeholder="Example: Dallas Card Show" />
+  <div>
+    <label>Customer/Event</label>
+    <input type="text" id="customerEventInput" />
+  </div>
 
-      <label>Notes</label>
-      <textarea id="notesInput" rows="3" placeholder="Optional notes"></textarea>
+  <div class="form-full">
+    <label>Notes</label>
+    <textarea id="notesInput" rows="2"></textarea>
+  </div>
 
+</div>
       <div class="modal-actions">
         <button class="cancel-btn" onclick="closeSoldModal()">Cancel</button>
         <button class="submit-btn" onclick="submitSale()">Submit Sale</button>
