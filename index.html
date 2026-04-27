@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ESNTL Vault Inventory</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 20px;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    input, select {
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .info {
+      font-size: 14px;
+      margin: 4px 0;
+    }
+
+    .price {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .qty {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #eee;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>ESNTL Vault</h1>
+  <div class="subtitle">Current Card Inventory</div>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Search card name..." />
+
+    <select id="setFilter">
+      <option value="">All Sets</option>
+    </select>
+
+    <select id="conditionFilter">
+      <option value="">All Conditions</option>
+    </select>
+
+    <select id="sortSelect">
+      <option value="">Sort</option>
+      <option value="priceLow">Price: Low to High</option>
+      <option value="priceHigh">Price: High to Low</option>
+      <option value="nameAZ">Name: A-Z</option>
+    </select>
+  </div>
+
+  <div id="inventory" class="grid"></div>
+
+  <script>
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSF9FO8t7Ake0qvxB4g0M9xw5WMILHKw19Wg0HGuQf-AA0yHnjjBfJzyAbKg0kEbGGX2m7pQmY8nX9H/pub?gid=2036564200&single=true&output=csv";
+
+    let inventoryData = [];
+
+    Papa.parse(csvUrl, {
+      download: true,
+      header: true,
+      complete: function(results) {
+        inventoryData = results.data.filter(item => item["Product Name"]);
+        populateFilters();
+        renderInventory();
+      }
+    });
+
+    function populateFilters() {
+      const setFilter = document.getElementById("setFilter");
+      const conditionFilter = document.getElementById("conditionFilter");
+
+      const sets = [...new Set(inventoryData.map(item => item["Set"]).filter(Boolean))].sort();
+      const conditions = [...new Set(inventoryData.map(item => item["Condition"]).filter(Boolean))].sort();
+
+      sets.forEach(set => {
+        const option = document.createElement("option");
+        option.value = set;
+        option.textContent = set;
+        setFilter.appendChild(option);
+      });
+
+      conditions.forEach(condition => {
+        const option = document.createElement("option");
+        option.value = condition;
+        option.textContent = condition;
+        conditionFilter.appendChild(option);
+      });
+    }
+
+    function renderInventory() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const set = document.getElementById("setFilter").value;
+      const condition = document.getElementById("conditionFilter").value;
+      const sort = document.getElementById("sortSelect").value;
+
+      let filtered = inventoryData.filter(item => {
+        return (
+          item["Product Name"].toLowerCase().includes(search) &&
+          (set === "" || item["Set"] === set) &&
+          (condition === "" || item["Condition"] === condition)
+        );
+      });
+
+      if (sort === "priceLow") {
+        filtered.sort((a, b) => parseFloat(a["Market Price"] || 0) - parseFloat(b["Market Price"] || 0));
+      }
+
+      if (sort === "priceHigh") {
+        filtered.sort((a, b) => parseFloat(b["Market Price"] || 0) - parseFloat(a["Market Price"] || 0));
+      }
+
+      if (sort === "nameAZ") {
+        filtered.sort((a, b) => a["Product Name"].localeCompare(b["Product Name"]));
+      }
+
+      const container = document.getElementById("inventory");
+      container.innerHTML = "";
+
+      filtered.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <h3>${item["Product Name"]}</h3>
+          <div class="info"><strong>Set:</strong> ${item["Set"] || ""}</div>
+          <div class="info"><strong>Card #:</strong> ${item["Card #"] || ""}</div>
+          <div class="info"><strong>Rarity:</strong> ${item["Rarity"] || ""}</div>
+          <div class="info"><strong>Variant:</strong> ${item["Variant"] || ""}</div>
+          <div class="info"><strong>Grade:</strong> ${item["Grade"] || ""}</div>
+          <div class="info"><strong>Condition:</strong> ${item["Condition"] || ""}</div>
+          <div class="price">$${item["Market Price"] || "0.00"}</div>
+          <div class="qty">Qty: ${item["Qty"] || "0"}</div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderInventory);
+    document.getElementById("setFilter").addEventListener("change", renderInventory);
+    document.getElementById("conditionFilter").addEventListener("change", renderInventory);
+    document.getElementById("sortSelect").addEventListener("change", renderInventory);
+  </script>
+
+</body>
+</html>
