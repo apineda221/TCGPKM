@@ -9,52 +9,45 @@
 
   <style>
     :root {
-      --vault-ink: #0b3438;
-      --vault-dark: #122729;
-      --vault-deep: #0b1f22;
-      --vault-green: #9fcf3a;
-      --vault-green-soft: #c4ef55;
-      --vault-cream: #f7f8f4;
-      --vault-white: #ffffff;
-      --vault-muted: #647174;
-      --vault-border: rgba(11, 52, 56, 0.12);
-      --vault-shadow: 0 18px 45px rgba(7, 31, 34, 0.12);
-      --vault-radius: 18px;
+      --black: #030303;
+      --black-soft: #101010;
+      --gold: #d9a928;
+      --gold-light: #ffe38a;
+      --gold-deep: #9b6b10;
+      --white: #ffffff;
+      --muted: #b9b9b9;
+      --card: #111111;
+      --border: rgba(217, 169, 40, 0.28);
+      --shadow: 0 18px 45px rgba(0,0,0,0.45);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--vault-cream);
       margin: 0;
-      color: var(--vault-ink);
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--black);
+      color: var(--white);
     }
 
-    button,
-    input,
-    select,
-    textarea {
-      font: inherit;
-    }
+    button, input, select, textarea { font: inherit; }
 
     .site-header {
-      background: var(--vault-white);
+      background: rgba(3,3,3,0.94);
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid var(--vault-border);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
     }
 
     .top-bar {
-      height: 92px;
+      min-height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 16px 28px 8px;
       position: relative;
-      padding: 0 28px;
     }
 
     .search-icon {
@@ -64,78 +57,89 @@
       transform: translateY(-50%);
       width: 26px;
       height: 26px;
-      color: var(--vault-ink);
+      color: var(--gold-light);
     }
 
     .brand-lockup {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 12px;
-      letter-spacing: 2px;
+      gap: 8px;
       text-transform: uppercase;
       font-weight: 900;
-      font-size: clamp(1.35rem, 2vw, 2rem);
-      color: var(--vault-ink);
+      letter-spacing: 6px;
+      color: var(--gold-light);
+      text-align: center;
     }
 
-    .logo-mark {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 4px solid var(--vault-green);
-      background: var(--vault-dark);
-      color: var(--vault-green-soft);
-      display: grid;
-      place-items: center;
-      font-weight: 900;
-      box-shadow: inset 0 0 0 3px rgba(255,255,255,0.14);
+    .brand-logo {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 18px rgba(217,169,40,0.35));
+    }
+
+    .brand-name {
+      font-size: clamp(1.15rem, 2vw, 1.7rem);
+      background: linear-gradient(180deg, var(--gold-light), var(--gold), var(--gold-deep));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .brand-sub {
+      color: var(--white);
+      letter-spacing: 9px;
+      font-size: 0.76rem;
+      margin-top: -4px;
     }
 
     .nav-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: clamp(18px, 3vw, 48px);
-      padding: 0 24px 24px;
+      gap: clamp(18px, 3vw, 44px);
+      padding: 8px 24px 22px;
       flex-wrap: wrap;
-      font-size: 1rem;
+      font-size: 0.98rem;
     }
 
-    .nav-row a,
-    .nav-row button {
-      color: var(--vault-ink);
+    .nav-row a, .nav-row button {
+      color: var(--white);
       background: none;
       border: none;
       text-decoration: none;
       cursor: pointer;
-      padding: 4px;
+      padding: 6px 2px;
       white-space: nowrap;
+      opacity: 0.9;
     }
+
+    .nav-row a:hover, .nav-row button:hover { color: var(--gold-light); }
 
     .hero {
       position: relative;
       overflow: hidden;
-      min-height: 430px;
+      min-height: 520px;
       display: grid;
       place-items: center;
       text-align: center;
-      padding: 80px 24px;
-      color: white;
+      padding: 92px 24px;
       background:
-        radial-gradient(circle at 14% 68%, rgba(159, 207, 58, 0.95) 0 42px, transparent 43px),
-        radial-gradient(circle at 72% 28%, rgba(159, 207, 58, 0.95) 0 35px, transparent 36px),
-        radial-gradient(circle at 86% 62%, rgba(159, 207, 58, 0.95) 0 30px, transparent 31px),
-        linear-gradient(135deg, rgba(18, 39, 41, 0.96), rgba(45, 39, 34, 0.96));
+        radial-gradient(circle at 50% 18%, rgba(217,169,40,0.24), transparent 30%),
+        radial-gradient(circle at 12% 65%, rgba(217,169,40,0.18), transparent 24%),
+        radial-gradient(circle at 88% 64%, rgba(217,169,40,0.18), transparent 24%),
+        linear-gradient(135deg, #000 0%, #101010 48%, #000 100%);
     }
 
     .hero::before {
       content: "";
       position: absolute;
       inset: 0;
-      opacity: 0.18;
+      opacity: 0.14;
       background-image:
-        linear-gradient(30deg, transparent 30%, rgba(255,255,255,0.14) 31%, rgba(255,255,255,0.14) 34%, transparent 35%),
-        linear-gradient(150deg, transparent 30%, rgba(255,255,255,0.14) 31%, rgba(255,255,255,0.14) 34%, transparent 35%);
+        linear-gradient(30deg, transparent 30%, rgba(255,227,138,0.22) 31%, rgba(255,227,138,0.22) 34%, transparent 35%),
+        linear-gradient(150deg, transparent 30%, rgba(255,227,138,0.22) 31%, rgba(255,227,138,0.22) 34%, transparent 35%);
       background-size: 138px 80px;
       background-position: center;
     }
@@ -144,43 +148,56 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, rgba(7, 31, 34, 0.24), transparent 30%, transparent 70%, rgba(7, 31, 34, 0.24));
+      background: linear-gradient(90deg, rgba(0,0,0,0.78), transparent 35%, transparent 65%, rgba(0,0,0,0.78));
     }
 
     .hero-content {
       position: relative;
       z-index: 2;
-      max-width: 820px;
+      max-width: 860px;
+    }
+
+    .hero-logo {
+      width: min(260px, 58vw);
+      height: auto;
+      object-fit: contain;
+      margin-bottom: 22px;
+      filter: drop-shadow(0 0 28px rgba(217,169,40,0.32));
     }
 
     .hero-kicker {
       display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border: 1px solid rgba(255,255,255,0.24);
+      padding: 9px 15px;
+      border: 1px solid var(--border);
       border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(8px);
+      background: rgba(217,169,40,0.08);
+      color: var(--gold-light);
       margin-bottom: 18px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
+      font-weight: 800;
+      letter-spacing: 1px;
       text-transform: uppercase;
       font-size: 0.78rem;
     }
 
     .hero h1 {
-      font-size: clamp(2.4rem, 6vw, 4.8rem);
-      line-height: 0.95;
+      font-size: clamp(2.45rem, 6vw, 5rem);
+      line-height: 0.96;
       margin: 0 0 18px;
       letter-spacing: -2px;
     }
 
+    .gold-text {
+      background: linear-gradient(180deg, var(--gold-light), var(--gold), var(--gold-deep));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
     .hero p {
-      margin: 0 auto 28px;
-      max-width: 620px;
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      color: rgba(255,255,255,0.86);
+      margin: 0 auto 30px;
+      max-width: 660px;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      color: rgba(255,255,255,0.78);
     }
 
     .hero-actions {
@@ -190,32 +207,28 @@
       flex-wrap: wrap;
     }
 
-    .btn-primary,
-    .btn-secondary {
-      border: none;
+    .btn-primary, .btn-secondary {
       border-radius: 12px;
       padding: 15px 24px;
       cursor: pointer;
-      font-weight: 800;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      font-weight: 900;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .btn-primary {
-      background: white;
-      color: var(--vault-ink);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+      border: none;
+      color: #050505;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold), var(--gold-deep));
+      box-shadow: 0 14px 32px rgba(217,169,40,0.22);
     }
 
     .btn-secondary {
-      background: rgba(255,255,255,0.12);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(255,255,255,0.05);
+      color: var(--white);
+      border: 1px solid var(--border);
     }
 
-    .btn-primary:hover,
-    .btn-secondary:hover {
-      transform: translateY(-2px);
-    }
+    .btn-primary:hover, .btn-secondary:hover { transform: translateY(-2px); }
 
     .stats-strip {
       max-width: 1120px;
@@ -229,18 +242,18 @@
     }
 
     .stat-card {
-      background: white;
-      border-radius: var(--vault-radius);
+      background: linear-gradient(180deg, #151515, #0d0d0d);
+      border-radius: 18px;
       padding: 20px;
-      box-shadow: var(--vault-shadow);
-      border: 1px solid var(--vault-border);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
     }
 
     .stat-label {
-      color: var(--vault-muted);
+      color: var(--muted);
       font-size: 0.82rem;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
       font-weight: 800;
     }
 
@@ -248,6 +261,7 @@
       font-size: 1.65rem;
       font-weight: 900;
       margin-top: 6px;
+      color: var(--gold-light);
     }
 
     .inventory-section {
@@ -270,16 +284,13 @@
       letter-spacing: -1px;
     }
 
-    .section-head p {
-      margin: 6px 0 0;
-      color: var(--vault-muted);
-    }
+    .section-head p { margin: 6px 0 0; color: var(--muted); }
 
     .controls-panel {
-      background: white;
+      background: linear-gradient(180deg, #151515, #0d0d0d);
       border-radius: 22px;
-      border: 1px solid var(--vault-border);
-      box-shadow: 0 10px 28px rgba(7, 31, 34, 0.07);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
       padding: 16px;
       display: grid;
       grid-template-columns: 1.1fr 1.7fr 1fr 1fr 1fr;
@@ -287,24 +298,22 @@
       margin-bottom: 22px;
     }
 
-    input,
-    select,
-    textarea {
+    input, select, textarea {
       width: 100%;
       padding: 13px 14px;
       font-size: 15px;
-      border: 1px solid var(--vault-border);
+      border: 1px solid rgba(217,169,40,0.25);
       border-radius: 12px;
-      background: #fbfcfa;
-      color: var(--vault-ink);
+      background: #050505;
+      color: var(--white);
       outline: none;
     }
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--vault-green);
-      box-shadow: 0 0 0 4px rgba(159, 207, 58, 0.18);
+    input::placeholder, textarea::placeholder { color: #777; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(217,169,40,0.14);
     }
 
     .grid {
@@ -314,45 +323,44 @@
     }
 
     .card {
-      background: white;
+      background: linear-gradient(180deg, #171717, #0d0d0d);
       border-radius: 22px;
       padding: 18px;
-      box-shadow: 0 10px 30px rgba(7, 31, 34, 0.08);
-      border: 1px solid var(--vault-border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.38);
+      border: 1px solid var(--border);
       position: relative;
       overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .card::before {
       content: "";
       position: absolute;
       inset: 0 0 auto;
-      height: 6px;
-      background: linear-gradient(90deg, var(--vault-green), var(--vault-green-soft));
+      height: 5px;
+      background: linear-gradient(90deg, var(--gold-deep), var(--gold-light), var(--gold-deep));
     }
 
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: var(--vault-shadow);
+      border-color: rgba(255,227,138,0.55);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.55);
     }
 
     .card h3 {
       margin: 10px 0 10px;
       font-size: 1.08rem;
       line-height: 1.25;
-      color: var(--vault-deep);
+      color: var(--white);
     }
 
     .info {
       font-size: 0.9rem;
       margin: 6px 0;
-      color: #34484b;
+      color: #d0d0d0;
     }
 
-    .info strong {
-      color: var(--vault-ink);
-    }
+    .info strong { color: var(--gold-light); }
 
     .price-row {
       display: flex;
@@ -365,29 +373,29 @@
     .price {
       font-size: 1.55rem;
       font-weight: 900;
-      color: var(--vault-deep);
+      color: var(--gold-light);
     }
 
     .qty {
       display: inline-flex;
-      align-items: center;
       padding: 7px 11px;
       border-radius: 999px;
-      background: rgba(159, 207, 58, 0.18);
-      color: var(--vault-ink);
+      background: rgba(217,169,40,0.12);
+      color: var(--gold-light);
+      border: 1px solid var(--border);
       font-size: 0.82rem;
       font-weight: 800;
     }
 
     .type-badge {
       display: inline-flex;
-      align-items: center;
       margin-top: 4px;
       margin-bottom: 8px;
       padding: 6px 10px;
       border-radius: 999px;
-      background: var(--vault-deep);
-      color: white;
+      background: rgba(217,169,40,0.13);
+      color: var(--gold-light);
+      border: 1px solid var(--border);
       font-size: 0.75rem;
       font-weight: 900;
       letter-spacing: 0.5px;
@@ -400,23 +408,19 @@
       padding: 13px;
       border: none;
       border-radius: 13px;
-      background: var(--vault-deep);
-      color: white;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold), var(--gold-deep));
+      color: #050505;
       font-size: 0.95rem;
       font-weight: 900;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: transform 0.2s ease, filter 0.2s ease;
     }
 
-    .sold-btn:hover {
-      background: #18555c;
-      transform: translateY(-1px);
-    }
+    .sold-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
 
-    .empty-state,
-    #loadingMessage {
+    .empty-state, #loadingMessage {
       text-align: center;
-      color: var(--vault-muted);
+      color: var(--muted);
       margin: 24px 0;
       font-weight: 700;
     }
@@ -425,7 +429,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(7, 31, 34, 0.72);
+      background: rgba(0,0,0,0.76);
       z-index: 999;
       align-items: center;
       justify-content: center;
@@ -434,15 +438,15 @@
     }
 
     .modal {
-      background: white;
+      background: linear-gradient(180deg, #171717, #0d0d0d);
       width: 100%;
       max-width: 760px;
       border-radius: 24px;
       padding: 22px;
-      box-shadow: 0 24px 70px rgba(0,0,0,0.32);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.7);
       max-height: 90vh;
       overflow-y: auto;
-      border: 1px solid rgba(255,255,255,0.3);
+      border: 1px solid var(--border);
     }
 
     .form-grid {
@@ -451,13 +455,11 @@
       gap: 12px;
     }
 
-    .form-full {
-      grid-column: span 2;
-    }
+    .form-full { grid-column: span 2; }
 
     .modal h2 {
       margin: 0 0 12px;
-      color: var(--vault-deep);
+      color: var(--gold-light);
       font-size: 1.75rem;
     }
 
@@ -466,7 +468,7 @@
       margin: 8px 0 5px;
       font-size: 0.85rem;
       font-weight: 900;
-      color: var(--vault-ink);
+      color: var(--gold-light);
     }
 
     .modal-actions {
@@ -486,76 +488,39 @@
     }
 
     .submit-btn {
-      background: var(--vault-deep);
-      color: white;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold), var(--gold-deep));
+      color: #050505;
     }
 
     .cancel-btn {
-      background: #e9eeed;
-      color: var(--vault-ink);
+      background: #252525;
+      color: var(--white);
+      border: 1px solid var(--border) !important;
     }
 
     #statusMessage {
       margin-top: 12px;
       font-size: 0.9rem;
       font-weight: 900;
-      color: var(--vault-ink);
+      color: var(--gold-light);
     }
 
     @media (max-width: 900px) {
-      .controls-panel {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .section-head {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .stats-strip {
-        grid-template-columns: 1fr;
-      }
+      .controls-panel { grid-template-columns: 1fr 1fr; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .stats-strip { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 620px) {
-      .top-bar {
-        height: 78px;
-        justify-content: center;
-      }
-
-      .search-icon {
-        display: none;
-      }
-
-      .nav-row {
-        justify-content: flex-start;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        padding: 0 18px 18px;
-      }
-
-      .hero {
-        min-height: 390px;
-        padding: 58px 18px;
-      }
-
-      .controls-panel,
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .form-full {
-        grid-column: span 1;
-      }
-
-      .brand-lockup {
-        font-size: 1.15rem;
-      }
-
-      .logo-mark {
-        width: 38px;
-        height: 38px;
-      }
+      .top-bar { min-height: 88px; }
+      .search-icon { display: none; }
+      .brand-logo { width: 70px; height: 70px; }
+      .brand-name { font-size: 1.08rem; letter-spacing: 4px; }
+      .brand-sub { letter-spacing: 7px; }
+      .nav-row { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding: 8px 18px 18px; }
+      .hero { min-height: 460px; padding: 58px 18px; }
+      .controls-panel, .form-grid { grid-template-columns: 1fr; }
+      .form-full { grid-column: span 1; }
     }
   </style>
 </head>
@@ -569,8 +534,9 @@
       </svg>
 
       <div class="brand-lockup" aria-label="ESNTL Vault">
-        <div class="logo-mark">EV</div>
-        <div>ESNTL Vault</div>
+        <img class="brand-logo" src="assets/esntl-vault-logo.png" alt="ESNTL Vault logo" />
+        <div class="brand-name">ESNTL</div>
+        <div class="brand-sub">Vault</div>
       </div>
     </div>
 
@@ -586,8 +552,9 @@
 
   <section class="hero">
     <div class="hero-content">
+      <img class="hero-logo" src="assets/esntl-vault-logo.png" alt="ESNTL Vault logo" />
       <div class="hero-kicker">Pokémon • Singles • Sealed • Collectibles</div>
-      <h1>Unlock the next piece of your collection.</h1>
+      <h1><span class="gold-text">Unlock</span> the next piece of your collection.</h1>
       <p>Browse the current ESNTL Vault inventory, find the cards you need, and check what sealed product is available now.</p>
       <div class="hero-actions">
         <button class="btn-primary" onclick="setTypeAndScroll('singles')">Shop Singles</button>
@@ -657,40 +624,13 @@
           <input type="password" id="passcodeInput" placeholder="Enter passcode" />
         </div>
 
-        <div>
-          <label>Type</label>
-          <input type="text" id="typeInput" readonly />
-        </div>
-
-        <div>
-          <label>Product Name</label>
-          <input type="text" id="productNameInput" readonly />
-        </div>
-
-        <div>
-          <label>Set</label>
-          <input type="text" id="setInput" readonly />
-        </div>
-
-        <div>
-          <label>Card #</label>
-          <input type="text" id="cardNumberInput" readonly />
-        </div>
-
-        <div>
-          <label>Condition</label>
-          <input type="text" id="conditionInput" readonly />
-        </div>
-
-        <div>
-          <label>Qty Sold</label>
-          <input type="number" id="qtySoldInput" value="1" min="1" />
-        </div>
-
-        <div>
-          <label>Sold Price</label>
-          <input type="number" id="soldPriceInput" step="0.01" />
-        </div>
+        <div><label>Type</label><input type="text" id="typeInput" readonly /></div>
+        <div><label>Product Name</label><input type="text" id="productNameInput" readonly /></div>
+        <div><label>Set</label><input type="text" id="setInput" readonly /></div>
+        <div><label>Card #</label><input type="text" id="cardNumberInput" readonly /></div>
+        <div><label>Condition</label><input type="text" id="conditionInput" readonly /></div>
+        <div><label>Qty Sold</label><input type="number" id="qtySoldInput" value="1" min="1" /></div>
+        <div><label>Sold Price</label><input type="number" id="soldPriceInput" step="0.01" /></div>
 
         <div>
           <label>Payment Method</label>
@@ -705,15 +645,8 @@
           </select>
         </div>
 
-        <div>
-          <label>Customer/Event</label>
-          <input type="text" id="customerEventInput" />
-        </div>
-
-        <div class="form-full">
-          <label>Notes</label>
-          <textarea id="notesInput" rows="2"></textarea>
-        </div>
+        <div><label>Customer/Event</label><input type="text" id="customerEventInput" /></div>
+        <div class="form-full"><label>Notes</label><textarea id="notesInput" rows="2"></textarea></div>
       </div>
 
       <div class="modal-actions">
@@ -765,7 +698,6 @@
     function loadInventory() {
       const loading = document.getElementById("loadingMessage");
       const container = document.getElementById("inventory");
-
       loading.textContent = "Loading inventory...";
       container.innerHTML = "";
 
@@ -774,25 +706,19 @@
         header: true,
         complete: function(results) {
           inventoryData = results.data.filter(item => item["Product Name"]);
-
           document.getElementById("setFilter").innerHTML = '<option value="">All Sets</option>';
           document.getElementById("conditionFilter").innerHTML = '<option value="">All Conditions</option>';
-
           populateFilters();
           renderInventory();
-
           loading.textContent = inventoryData.length ? "" : "No inventory found.";
         },
-        error: function() {
-          loading.textContent = "Error loading inventory.";
-        }
+        error: function() { loading.textContent = "Error loading inventory."; }
       });
     }
 
     function populateFilters() {
       const setFilter = document.getElementById("setFilter");
       const conditionFilter = document.getElementById("conditionFilter");
-
       const sets = [...new Set(inventoryData.map(item => item["Set"]).filter(Boolean))].sort();
       const conditions = [...new Set(inventoryData.map(item => item["Condition"]).filter(Boolean))].sort();
 
@@ -818,24 +744,14 @@
       const sort = document.getElementById("sortSelect").value;
 
       let filtered = inventoryData.filter(item => {
-        return (
-          String(item["Product Name"] || "").toLowerCase().includes(search) &&
+        return String(item["Product Name"] || "").toLowerCase().includes(search) &&
           (set === "" || item["Set"] === set) &&
-          (condition === "" || item["Condition"] === condition)
-        );
+          (condition === "" || item["Condition"] === condition);
       });
 
-      if (sort === "priceLow") {
-        filtered.sort((a, b) => numberValue(a["Market Price"]) - numberValue(b["Market Price"]));
-      }
-
-      if (sort === "priceHigh") {
-        filtered.sort((a, b) => numberValue(b["Market Price"]) - numberValue(a["Market Price"]));
-      }
-
-      if (sort === "nameAZ") {
-        filtered.sort((a, b) => String(a["Product Name"] || "").localeCompare(String(b["Product Name"] || "")));
-      }
+      if (sort === "priceLow") filtered.sort((a, b) => numberValue(a["Market Price"]) - numberValue(b["Market Price"]));
+      if (sort === "priceHigh") filtered.sort((a, b) => numberValue(b["Market Price"]) - numberValue(a["Market Price"]));
+      if (sort === "nameAZ") filtered.sort((a, b) => String(a["Product Name"] || "").localeCompare(String(b["Product Name"] || "")));
 
       const container = document.getElementById("inventory");
       container.innerHTML = "";
@@ -846,10 +762,9 @@
         return;
       }
 
-      filtered.forEach((item, index) => {
+      filtered.forEach(item => {
         const card = document.createElement("div");
         card.className = "card";
-
         const itemType = item["Type"] || (currentType === "sealed" ? "Sealed" : "Single");
         const safeItem = JSON.stringify(item).replace(/'/g, "&apos;");
 
@@ -868,7 +783,6 @@
           </div>
           <button class="sold-btn" onclick='openSoldModal(${safeItem})'>Sold</button>
         `;
-
         container.appendChild(card);
       });
 
@@ -886,10 +800,8 @@
 
     function openSoldModal(item) {
       const itemType = item["Type"] || (currentType === "sealed" ? "Sealed" : "Single");
-
       document.getElementById("soldModal").style.display = "flex";
       document.getElementById("statusMessage").textContent = "";
-
       document.getElementById("passcodeInput").value = "";
       document.getElementById("typeInput").value = itemType;
       document.getElementById("productNameInput").value = item["Product Name"] || "";
@@ -903,9 +815,7 @@
       document.getElementById("notesInput").value = "";
     }
 
-    function closeSoldModal() {
-      document.getElementById("soldModal").style.display = "none";
-    }
+    function closeSoldModal() { document.getElementById("soldModal").style.display = "none"; }
 
     async function submitSale() {
       const status = document.getElementById("statusMessage");
@@ -929,19 +839,12 @@
         await fetch(scriptUrl, {
           method: "POST",
           mode: "no-cors",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
 
         status.textContent = "Sale submitted. Refreshing inventory...";
-
-        setTimeout(() => {
-          closeSoldModal();
-          loadInventory();
-        }, 1500);
-
+        setTimeout(() => { closeSoldModal(); loadInventory(); }, 1500);
       } catch (error) {
         status.textContent = "Error submitting sale. Try again.";
       }
@@ -958,10 +861,7 @@
     document.getElementById("setFilter").addEventListener("change", renderInventory);
     document.getElementById("conditionFilter").addEventListener("change", renderInventory);
     document.getElementById("sortSelect").addEventListener("change", renderInventory);
-
-    document.getElementById("soldModal").addEventListener("click", function(event) {
-      if (event.target === this) closeSoldModal();
-    });
+    document.getElementById("soldModal").addEventListener("click", function(event) { if (event.target === this) closeSoldModal(); });
 
     loadInventory();
   </script>
